@@ -1,5 +1,5 @@
 <footer class="footer">
-    <div class="container d-flex mt-5" style="justify-content: space-between;">
+    <div class="container d-flex p-3" style="justify-content: space-between;">
         <a href="#" class="text-decoration-none d-flex align-items-center justify-content-center justify-content-md-start gap-2"><i class="fas fa-film"></i> MoviesApp</a>
         <div class="col-md-4 d-flex flex-column align-items-center align-items-md-end">
             <p class="mb-2 fw-light small">&copy; <?php echo date('M Y'); ?> Jhonito 021</p>

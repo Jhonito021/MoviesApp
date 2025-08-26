@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="../assets/css/style.css">
 <body class="register-page">
     <div class="container-fluid">
         <div class="row min-vh-100">

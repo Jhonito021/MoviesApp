@@ -1,18 +1,17 @@
-<link rel="stylesheet" href="../assets/css/style.css">
 <body class="login-page">
     <div class="container-fluid">
         <div class="row min-vh-100">
             <!-- Côté gauche - Image/Illustration -->
             <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center bg-primary">
                 <div class="text-center text-white">
-                    <i class="fas fa-calendar-alt fa-6x mb-4"></i>
-                    <h1 class="display-4 fw-bold mb-3">Agenda Personnel</h1>
+                    <i class="fas fa-film fa-6x mb-4"></i>
+                    <h1 class="display-4 fw-bold mb-3">MoviesApp</h1>
                     <p class="lead">Gérez vos événements et tâches avec facilité</p>
                     <div class="mt-5">
                         <div class="row text-center">
                             <div class="col-4">
                                 <i class="fas fa-tasks fa-2x mb-2"></i>
-                                <p>Gestion des tâches</p>
+                                <p>Gestion des films</p>
                             </div>
                             <div class="col-4">
                                 <i class="fas fa-bell fa-2x mb-2"></i>
