@@ -7,13 +7,13 @@ if (isset($_GET['page']) && !empty(trim($_GET['page']))) {
 
 
 switch ($page) {
-    case 'patients':
-        require '';
+    case 'film':
+        require 'controllers/FilmControllers.php';
   
         break;
     default:
         require 'views/coponements/header.php';
-        require 'views/pages/register.php';
+        require 'views/pages/home.php';
         require 'views/coponements/footer.php';
         break;
 }
