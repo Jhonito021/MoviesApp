@@ -1,3 +1,16 @@
+<?php
+    require 'config/db.php';
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $last_name = $_POST ['last_name'];
+        $first_name = $_POST ['first_name'];
+        $username = $_POST ['username'];
+        $email = $_POST ['email'];
+        $password = $_POST ['password'];
+        $confirm_password = $_POST ['confirm_password'];
+        
+    }
+?>  
 <body class="register-page">
     <div class="container-fluid">
         <div class="row min-vh-100">
