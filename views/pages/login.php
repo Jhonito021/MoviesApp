@@ -1,102 +1,81 @@
-<body class="login-page">
-    <div class="container-fluid">
-        <div class="row min-vh-100">
-            <!-- Côté gauche - Image/Illustration -->
-            <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center bg-primary">
-                <div class="text-center text-white">
-                    <i class="fas fa-film fa-6x mb-4"></i>
-                    <h1 class="display-4 fw-bold mb-3">MoviesApp</h1>
-                    <p class="lead">Gérez vos événements et tâches avec facilité</p>
-                    <div class="mt-5">
-                        <div class="row text-center">
-                            <div class="col-4">
-                                <i class="fas fa-tasks fa-2x mb-2"></i>
-                                <p>Gestion des films</p>
-                            </div>
-                            <div class="col-4">
-                                <i class="fas fa-bell fa-2x mb-2"></i>
-                                <p>Rappels intelligents</p>
-                            </div>
-                            <div class="col-4">
-                                <i class="fas fa-mobile-alt fa-2x mb-2"></i>
-                                <p>Responsive design</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<?php
+require 'config/db.php';
+// Traitement du formulaire de connexion
+$message_erreur = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Récupérer les données du formulaire
+    $email = isset($_POST['email']) ? $_POST['email'] : '';
+    $mot_de_passe = isset($_POST['mot_de_passe']) ? $_POST['mot_de_passe'] : '';
+    
+    if (empty($email) || empty($mot_de_passe)) {
+        $message_erreur = 'Veuillez remplir tous les champs.';
+    } else {
+        
+        // Rechercher l'utilisateur par email
+        $query = "SELECT * FROM users WHERE email = :email";
+        $stmt = $db->prepare($query);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        
+        if ($utilisateur = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            // Vérifier le mot de passe
+            if (password_verify($mot_de_passe, $utilisateur['mot_de_passe'])) {
+                // Connexion réussie, enregistrer dans la session
+                $_SESSION['utilisateur_id'] = $utilisateur['id'];
+                $_SESSION['utilisateur_nom'] = $utilisateur['nom'];
+                $_SESSION['utilisateur_prenom'] = $utilisateur['prenom'];
+                $_SESSION['utilisateur_email'] = $utilisateur['email'];
+                $_SESSION['theme'] = $utilisateur['theme'] ?: 'clair';
+                
+                // Rediriger vers le tableau de bord (fallback PHP)
+                echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Connexion...</title>';
+                echo '<meta http-equiv="refresh" content="1;url=index.php?page=tableau_bord">';
+                echo '<script>window.location.href = "index.php?page=tableau_bord";</script>';
+                echo '</head><body style="display:flex;align-items:center;justify-content:center;height:100vh;"><div style="text-align:center"><div class="spinner-border text-primary" role="status"></div><p class="mt-3">Connexion réussie ! Redirection...</p></div></body></html>';
+                exit;
+            } else {
+                $message_erreur = 'Email ou mot de passe incorrect.';
+            }
+        } else {
+            $message_erreur = 'Email ou mot de passe incorrect.';
+        }
+    }
+}
+?>
+
+<div class="row mt-5">
+    <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0"><i class="bi bi-box-arrow-in-right"></i> Connexion</h3>
             </div>
-
-            <!-- Côté droit - Formulaire de connexion -->
-            <div class="col-lg-6 d-flex align-items-center justify-content-center">
-                <div class="w-100 max-w-md">
-                    <div class="text-center mb-5">
-                        <h2 class="h3 mb-3">Connexion</h2>
-                        <p class="text-muted">Connectez-vous à votre compte</p>
+            <div class="card-body">
+                <?php if (!empty($message_erreur)): ?>
+                    <div class="alert alert-danger" role="alert">
+                        <?php echo htmlspecialchars($message_erreur); ?>
                     </div>
-
-                    <!-- Messages d'erreur/succès -->
-                    <div id="alert-container"></div>
-
-                    <!-- Formulaire de connexion -->
-                    <form id="loginForm" class="needs-validation" novalidate>
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Nom d'utilisateur</label>
-                            <div class="input-group">
-                                <span class="input-group-text">
-                                    <i class="fas fa-user"></i>
-                                </span>
-                                <input type="text" class="form-control" id="username" name="username" required>
-                                <div class="invalid-feedback">
-                                    Veuillez saisir votre nom d'utilisateur.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="password" class="form-label">Mot de passe</label>
-                            <div class="input-group">
-                                <span class="input-group-text">
-                                    <i class="fas fa-lock"></i>
-                                </span>
-                                <input type="password" class="form-control" id="password" name="password" required>
-                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <div class="invalid-feedback">
-                                    Veuillez saisir votre mot de passe.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg" id="loginBtn">
-                                <span class="spinner-border spinner-border-sm d-none me-2" role="status"></span>
-                                Se connecter
-                            </button>
-                        </div>
-                    </form>
-
-                    <div class="text-center mt-4">
-                        <p class="mb-0">
-                            Pas encore de compte ? 
-                            <a href="register.php" class="text-decoration-none">Créer un compte</a>
-                        </p>
+                <?php endif; ?>
+                
+                <form method="post" action="index.php?page=connexion">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
                     </div>
-
-                    <!-- Informations de connexion admin -->
-                    <div class="mt-5 p-3 bg-light rounded">
-                        <h6 class="text-muted mb-2">
-                            <i class="fas fa-info-circle me-2"></i>
-                            Accès administrateur
-                        </h6>
-                        <small class="text-muted">
-                            <strong>Utilisateur:</strong> admin<br>
-                            <strong>Mot de passe:</strong> admin123
-                        </small>
+                    <div class="mb-3">
+                        <label for="mot_de_passe" class="form-label">Mot de passe</label>
+                        <input type="password" class="form-control" id="mot_de_passe" name="mot_de_passe" required>
                     </div>
-                </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-box-arrow-in-right"></i> Se connecter
+                        </button>
+                        <a href="index.php?page=inscription" class="btn btn-outline-secondary">
+                            <i class="bi bi-person-plus"></i> Créer un compte
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-    
-    
+</div> 
